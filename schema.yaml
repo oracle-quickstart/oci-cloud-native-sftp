@@ -1,0 +1,195 @@
+title: Cloud Native SFP
+description: Resource Manager Stack for a Cloud Native SFTP 
+schemaVersion: 1.1.0
+version: "1.0"
+locale: "en"
+variableGroups:
+  - title: "Tenancy Information"
+    visible: false
+    variables:
+      # variables used by Terraform but not necesarrily exposed exposed to end user
+      - ${tenancy_ocid}
+      - ${region}
+  - title: "Network Configuration"
+    visible: true
+    variables:
+      - network_compartment_id
+      - use_existing_vcn
+      - vcn_cidr
+      - vcn_dns_label
+      - lb_subnet_cidr
+      - lb_subnet_dns_label
+      - sftp_subnet_cidr
+      - sftp_subnet_dns_label
+      - vcn_id
+      - lb_subnet_id
+      - sftp_subnet_id
+  - title: "Bucket Configuration"
+    visible: true
+    variables:
+      - s3_compatibility_compartment_id
+      - bucket_name
+  - title: "SFTP Resources Configuration"
+    visible: true
+    variables:
+      - resources_compartment_id
+      - sftp_lb_display_name
+      - sftp_lb_health_check_interval
+      - sftp_lb_health_check_timeout
+      - sftp_lb_health_check_retries
+
+# Terraform variables
+variables:
+  tenancy_ocid:
+    type: string
+    title: Tenancy ID
+    description: The Oracle Cloud Identifier (OCID) for your tenancy
+    required: true
+  region:
+    visible: true
+    type: oci:identity:region:name
+    title: Region
+    description: The region in which to create the resources
+    required: true
+  network_compartment_id:
+    visible: true
+    type: oci:identity:compartment:id
+    title: Compartment
+    description: The compartment of Network resources
+    required: true
+    default: ${compartment_ocid}
+  use_existing_vcn:
+    visible: true
+    type: boolean
+    title: Use an existing VCN ?
+    description: Indicates if an existing VCN should be used or creating a new one
+    required: true
+    default: false
+  vcn_cidr:
+    visible:
+      not:
+        - use_existing_vcn
+    type: string
+    title: VCN CIDR Block
+    description: The CIDR of the Virtual Cloud Network (VCN) to create. If you plan to peer this VCN with another VCN, the VCNs must not have overlapping CIDRs
+    pattern: "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\/(3[0-2]|[1-2]?[0-9])$"    
+    required: true
+    #default: "10.0.0.0/26"
+  vcn_dns_label:
+    visible:
+      not:
+        - use_existing_vcn
+    type: string
+    title: DNS Label
+    description: Only letters and numbers, starting with a letter. 15 characters max
+    maxLenght: 15
+    required: false
+  lb_subnet_cidr:
+    visible:
+      not:
+        - use_existing_vcn
+    type: string
+    title: Load Balancer subnet CIDR
+    description: The CIDR of the subnet (public) to create for the Network Load Balancer
+    pattern: "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\/(3[0-2]|[1-2]?[0-9])$"
+    required: true
+  lb_subnet_dns_label:
+    visible:
+      not:
+        - use_existing_vcn
+    type: string
+    title: Load Balancer subnet DNS label
+    description: Only letters and numbers, starting with a letter. 15 characters max
+    required: false
+  sftp_subnet_cidr:
+    visible:
+      not:
+        - use_existing_vcn
+    type: string
+    title: SFTP servers subnet CIDR
+    description: The CIDR of the subnet (private) to create for the SFTP servers
+    pattern: "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\/(3[0-2]|[1-2]?[0-9])$"
+    required: true
+  sftp_subnet_dns_label:
+    visible:
+      not:
+        - use_existing_vcn
+    type: string
+    title: SFTP servers subnet DNS label
+    description: Only letters and numbers, starting with a letter. 15 characters max
+    required: false
+
+  vcn_id:
+    visible: ${use_existing_vcn}
+    type: oci:core:vcn:id
+    title: Select VCN
+    description: The VCN to use for configuring a Cloud Native SFTP
+    required: true #${use_existing_vcn}
+    dependsOn:
+      compartmentId: ${network_compartment_id}
+  lb_subnet_id:
+    visible: ${use_existing_vcn}
+    type: oci:core:subnet:id
+    title: Select the Load Balancer subnet
+    description: "The subnet (public) used by the Network Load Balancer"
+    required: true #${use_existing_vcn}
+    dependsOn:
+      compartmentId: ${network_compartment_id}
+      vcnId: ${vcn_id}
+      hidePrivateSubnet: true
+  sftp_subnet_id:
+    visible: ${use_existing_vcn}
+    type: oci:core:subnet:id
+    title: "Select the SFTP servers subnet"
+    description: "The subnet (private) used by the SFTP servers"
+    required: true #${use_existing_vcn}
+    dependsOn:
+      compartmentId: ${network_compartment_id}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: true
+  s3_compatibility_compartment_id:
+    visible: true
+    type: oci:identity:compartment:id
+    title: S3 Compartment
+    description: The designated compartment for S3 Compatibility API, where the bucket is created
+    required: true
+    default: ${tenancy_ocid}
+  bucket_name:
+    visible: true
+    type: string
+    title: Bucket Name
+    description: ""
+    pattern: "^([-a-zA-Z0-9._~]{1,256})$"
+    maxLenght: 256
+    required: false
+  resources_compartment_id:
+    visible: true
+    type: oci:identity:compartment:id
+    title: Resources Compartment
+    description: The compartment where SFTP resources are created
+    required: true
+    default: ${compartment_ocid}
+  sftp_lb_display_name:
+    visible: false
+    type: string
+    title: Network Load Balancer Name
+    maxLenght: 256
+    required: false
+  sftp_lb_health_check_interval:
+    visible: true
+    type: number
+    title: SFTP Servers Health Check Interval
+    description: The interval, in milliseconds, used for checking SFTP servers health
+    required: false
+  sftp_lb_health_check_timeout:
+    visible: true
+    type: number
+    title: SFTP Servers Health Check Timeout
+    description: The timeout, in milliseconds, of SFTP servers health check
+    required: false
+  sftp_lb_health_check_retries:
+    visible: true
+    type: number
+    title: SFTP Servers Health Check Retries
+    description: The number of retries made while checking for SFTP servers health
+    required: false
