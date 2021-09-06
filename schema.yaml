@@ -29,14 +29,24 @@ variableGroups:
     variables:
       - s3_compatibility_compartment_id
       - bucket_name
-  - title: "SFTP Resources Configuration"
+  - title: "Load Balancer Configuration"
     visible: true
     variables:
-      - resources_compartment_id
-      - sftp_lb_display_name
-      - sftp_lb_health_check_interval
-      - sftp_lb_health_check_timeout
-      - sftp_lb_health_check_retries
+      - lb_compartment_id
+      - lb_display_name
+      - lb_health_check_interval
+      - lb_health_check_timeout
+      - lb_health_check_retries
+  - title: "SFTP Servers Configuration"
+    visible: true
+    variables:
+      - servers_compartment_id
+      - servers_display_name
+      - servers_hostname
+      - servers_shape
+      - servers_ocpus
+      - servers_image_id
+      - servers_ssh_authorized_keys
 
 # Terraform variables
 variables:
@@ -162,34 +172,97 @@ variables:
     pattern: "^([-a-zA-Z0-9._~]{1,256})$"
     maxLenght: 256
     required: false
-  resources_compartment_id:
+  lb_compartment_id:
     visible: true
     type: oci:identity:compartment:id
-    title: Resources Compartment
-    description: The compartment where SFTP resources are created
+    title: Network Compartment
+    description: The compartment where the Network Load Balancer is created
     required: true
     default: ${compartment_ocid}
-  sftp_lb_display_name:
+  lb_display_name:
     visible: false
     type: string
     title: Network Load Balancer Name
-    maxLenght: 256
+    maxLength: 256
     required: false
-  sftp_lb_health_check_interval:
+  lb_health_check_interval:
     visible: true
     type: number
     title: SFTP Servers Health Check Interval
-    description: The interval, in milliseconds, used for checking SFTP servers health
+    #description: The interval, in milliseconds, used for checking SFTP servers health
     required: false
-  sftp_lb_health_check_timeout:
+  lb_health_check_timeout:
     visible: true
     type: number
     title: SFTP Servers Health Check Timeout
-    description: The timeout, in milliseconds, of SFTP servers health check
+    #description: The timeout, in milliseconds, of SFTP servers health check
     required: false
-  sftp_lb_health_check_retries:
+  lb_health_check_retries:
     visible: true
     type: number
     title: SFTP Servers Health Check Retries
-    description: The number of retries made while checking for SFTP servers health
+    #description: The number of retries made while checking for SFTP servers health
     required: false
+  servers_compartment_id:
+    visible: true
+    type: oci:identity:compartment:id
+    title: Network Compartment
+    description: The compartment where the SFTP servers are created
+    required: true
+    default: ${compartment_ocid}
+  servers_display_name:
+    visible: true
+    type: string
+    title: SFTP Servers Name
+    maxLength: 256
+    required: false
+  servers_hostname:
+    visible: true
+    type: string
+    title: SFTP Servers Hostname
+    required: false
+  servers_shape:
+    visible: true
+    type: oci:core:instanceshape:name
+    title: SFTP Servers Shape
+    required: true
+    dependsOn:
+      compartmentId: ${tenancy_ocid}
+  servers_ocpus:
+    visible:
+      and:
+        - or:
+          - eq:
+            - servers_shape 
+            - "VM.Standard.E3.Flex"
+          - eq:
+            - servers_shape 
+            - "VM.Standard.E4.Flex"
+          - eq:
+            - servers_shape 
+            - "VM.Optimized3.Flex"
+          - eq:
+            - servers_shape 
+            - "VM.Standard.A1.Flex"
+    type: number
+    title: SFTP Servers OCPUs
+    minimum: 1
+    maximum: 4
+    multipleOf: 1
+    default: 1
+    required: false
+  servers_image_id:
+    visible: true
+    type: oci:core:image:id
+    title: SFTP Servers Shape
+    required: true
+    dependsOn:      
+       compartmentId: ${tenancy_ocid}      
+       #operatingSystem: "Oracle Linux"   
+       #operatingSystemVersion: "8.0"
+       shape: ${servers_shape}
+  servers_ssh_authorized_keys:
+    visible: true
+    type: oci:core:ssh:publickey
+    title: SFTP Servers Shape
+    required: true

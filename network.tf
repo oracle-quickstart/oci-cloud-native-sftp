@@ -26,7 +26,7 @@ resource "oci_core_subnet" "cn_sftp_lb_subnet" {
   prohibit_public_ip_on_vnic = false
 }
 
-resource "oci_core_subnet" "cn_sftp_sftp_subnet" {
+resource "oci_core_subnet" "cn_sftp_servers_subnet" {
 
   count = (var.sftp_subnet_id != "" ? 0 : 1)
 
@@ -38,6 +38,6 @@ resource "oci_core_subnet" "cn_sftp_sftp_subnet" {
   cidr_block = var.sftp_subnet_cidr
   dns_label  = var.sftp_subnet_dns_label
 
-  prohibit_internet_ingress  = true
-  prohibit_public_ip_on_vnic = true
+  prohibit_internet_ingress  = false
+  prohibit_public_ip_on_vnic = false
 }

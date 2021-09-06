@@ -1,0 +1,26 @@
+#cloud-config
+write_files:
+# - path: /run/bootstrap/drupal-settings-update.sh
+#   owner: root:root
+#   permissions: "0755"
+#   encoding: b64
+#   content: £{drupal-settings-update}
+- path: /run/bootstrap/sftp-config.sh
+  owner: root:root
+  permissions: "0755" 
+  content: |
+
+    # Installing the oci CLI
+    yum install -y python36-oci-cli
+
+    oci -v
+
+    # Updates Drupal settings
+    #/run/bootstrap/drupal-settings-update.sh
+
+    # Restarts the Apache HTTPD
+    #systemctl restart ssh
+
+runcmd:
+- [/run/bootstrap/sftp-config.sh]
+#  - [rm, -rf, /run/bootstrap]
