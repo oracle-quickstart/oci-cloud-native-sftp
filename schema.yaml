@@ -19,11 +19,11 @@ variableGroups:
       - vcn_dns_label
       - lb_subnet_cidr
       - lb_subnet_dns_label
-      - sftp_subnet_cidr
-      - sftp_subnet_dns_label
+      - servers_subnet_cidr
+      - servers_subnet_dns_label
       - vcn_id
       - lb_subnet_id
-      - sftp_subnet_id
+      - servers_subnet_id
   - title: "Bucket Configuration"
     visible: true
     variables:
@@ -46,6 +46,7 @@ variableGroups:
       - servers_shape
       - servers_ocpus
       - servers_image_id
+      - servers_count
       - servers_ssh_authorized_keys
 
 # Terraform variables
@@ -111,7 +112,7 @@ variables:
     title: Load Balancer subnet DNS label
     description: Only letters and numbers, starting with a letter. 15 characters max
     required: false
-  sftp_subnet_cidr:
+  servers_subnet_cidr:
     visible:
       not:
         - use_existing_vcn
@@ -120,7 +121,7 @@ variables:
     description: The CIDR of the subnet (private) to create for the SFTP servers
     pattern: "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\/(3[0-2]|[1-2]?[0-9])$"
     required: true
-  sftp_subnet_dns_label:
+  servers_subnet_dns_label:
     visible:
       not:
         - use_existing_vcn
@@ -147,7 +148,7 @@ variables:
       compartmentId: ${network_compartment_id}
       vcnId: ${vcn_id}
       hidePrivateSubnet: true
-  sftp_subnet_id:
+  servers_subnet_id:
     visible: ${use_existing_vcn}
     type: oci:core:subnet:id
     title: "Select the SFTP servers subnet"
@@ -189,19 +190,16 @@ variables:
     visible: true
     type: number
     title: SFTP Servers Health Check Interval
-    #description: The interval, in milliseconds, used for checking SFTP servers health
     required: false
   lb_health_check_timeout:
     visible: true
     type: number
     title: SFTP Servers Health Check Timeout
-    #description: The timeout, in milliseconds, of SFTP servers health check
     required: false
   lb_health_check_retries:
     visible: true
     type: number
     title: SFTP Servers Health Check Retries
-    #description: The number of retries made while checking for SFTP servers health
     required: false
   servers_compartment_id:
     visible: true
@@ -210,6 +208,13 @@ variables:
     description: The compartment where the SFTP servers are created
     required: true
     default: ${compartment_ocid}
+  servers_count:
+    type: number
+    title: SFTP Servers count
+    minimum: 1
+    maximum: 5
+    multipleOf: 1
+    required: false
   servers_display_name:
     visible: true
     type: string
@@ -225,6 +230,7 @@ variables:
     visible: true
     type: oci:core:instanceshape:name
     title: SFTP Servers Shape
+    default: "VM.Standard.A1.Flex"
     required: true
     dependsOn:
       compartmentId: ${tenancy_ocid}
@@ -264,5 +270,5 @@ variables:
   servers_ssh_authorized_keys:
     visible: true
     type: oci:core:ssh:publickey
-    title: SFTP Servers Shape
+    title: SFTP Servers public SSH key
     required: true

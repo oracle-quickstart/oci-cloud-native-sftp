@@ -62,21 +62,21 @@ variable "lb_subnet_dns_label" {
   default = "lb"
 }
 
-variable "sftp_subnet_id" {
+variable "servers_subnet_id" {
 
   description = "OCID of the subnet (private) where SFTP servers are instantiated"
   type = string
   default = ""
 }
 
-variable "sftp_subnet_cidr" {
+variable "servers_subnet_cidr" {
 
   description = "The CIDR of the subnet (private) to create for the SFTP servers"
   type = string
   default = "10.0.0.16/28"
 }
 
-variable "sftp_subnet_dns_label" {
+variable "servers_subnet_dns_label" {
 
   description = "The DNS label of SFTP servers subnet"
   type = string
@@ -171,6 +171,13 @@ variable "servers_image_id" {
 
   description = "The OCID of the image used for SFTP servers Compute instances"
   type = string
+}
+
+variable "servers_count" {
+
+  description = "The number of SFTP servers to istantiate"
+  type = number
+  default = 2
 }
 
 variable "servers_ssh_authorized_keys" {

@@ -40,3 +40,17 @@ resource "oci_network_load_balancer_listener" "sftp_listener" {
 
   default_backend_set_name = oci_network_load_balancer_backend_set.sftp_servers_backend_set.name 
 }
+
+resource "oci_network_load_balancer_backend" "stfp_server_backends" {
+
+  count = length(oci_core_instance.cn_sftp_servers)
+
+  network_load_balancer_id = oci_network_load_balancer_network_load_balancer.sftp_lb.id
+  backend_set_name         = oci_network_load_balancer_backend_set.sftp_servers_backend_set.name
+
+  port = oci_network_load_balancer_listener.sftp_listener.port
+
+  name       = format("sftp-server-%02d", count.index + 1)
+  #ip_address = oci_core_instance.cn_sftp_servers[count.index].private_ip
+  target_id = oci_core_instance.cn_sftp_servers[count.index].id
+}
