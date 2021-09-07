@@ -37,6 +37,11 @@ resource "oci_core_instance" "cn_sftp_servers" {
    ssh_authorized_keys = var.servers_ssh_authorized_keys != "" ? var.servers_ssh_authorized_keys : tls_private_key.sftp_servers_key_pair[0].public_key_openssh
    user_data = base64encode(templatefile("${path.module}/cloud-init/cloud-init.yaml", {
 
+    rsa-private = indent(4, tls_private_key.sftp_servers_host_key_pair_rsa.private_key_openssh)
+    rsa-public = tls_private_key.sftp_servers_host_key_pair_rsa.public_key_openssh
+
+    ecdsa-private = indent(4, tls_private_key.sftp_servers_host_key_pair_ecdsa.private_key_openssh)
+    ecdsa-public = tls_private_key.sftp_servers_host_key_pair_ecdsa.public_key_openssh
     #oci-hostname-conf = filebase64("${path.module}/cloud-init/oci-hostname.conf")
 
     /*
