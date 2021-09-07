@@ -19,19 +19,19 @@ data "archive_file" "generate_zip" {
   output_path = (var.target_directory != "" ? "${var.target_directory}/${local.archive_filename}" : "${path.module}/target/${local.archive_filename}")
   source_dir = "../"
   excludes    = [
-    "**/.git",
-    "**/.gitignore",
-    "**/.terraform",
-    "**/terraform.lock.hcl",
-    "**/.DS_STORE",
+    ".git",
+    ".gitignore",
+    ".terraform",
+    "terraform.lock.hcl",
+    ".DS_STORE",
     "LICENSE",
     "orm",
     "packer",
-    "**/provider.tf",
-    "**/README.md",
-    "**/terraform.tfstate",
-    "**/terraform.tfstate.backup",
-    "**/terraform.tfvars", 
-    "**/terraform.tfvars.template"
+    "provider.tf",
+    "README.md",
+    "terraform.tfstate",
+    "terraform.tfstate.backup",
+    "terraform.tfvars", 
+    "terraform.tfvars.template"
   ]
 }
