@@ -1,45 +1,41 @@
 #cloud-config
+groups:
+- sftp
+
+users:
+- default
+- name: ${sftp-user-name}
+  #primary_group: sftp
+  groups: ${sftp-user-group}
+  lock_passwd: true
+  no_create_home: true 
+  no_user_group: true
+  ssh_authorized_keys:
+  - ${sftp-user-public-key}
+  ssh_redirect_user: false
 ssh_deletekeys: true
 ssh_keys:
   rsa_private: |
-    ${rsa-private}
-  rsa_public: ${rsa-public}
+    ${host-key-rsa-private}
+  rsa_public: ${host-key-rsa-public}
   ecdsa_private: |
-    ${ecdsa-private}
-  ecdsa_public: ${ecdsa-public}
-
-# By default, the fingerprints of the authorized keys for the users
-# cloud-init adds are printed to the console. Setting
-# no_ssh_fingerprints to true suppresses this output.
+    ${host-key-ecdsa-private}
+  ecdsa_public: ${host-key-ecdsa-public}
 no_ssh_fingerprints: false
-
-# By default, (most) ssh host keys are printed to the console. Setting
-# emit_keys_to_console to false suppresses this output.
 ssh:
   emit_keys_to_console: false
 
 write_files:
-# - path: /run/bootstrap/drupal-settings-update.sh
-#   owner: root:root
-#   permissions: "0755"
-#   encoding: b64
-#   content: £{drupal-settings-update}
-- path: /run/bootstrap/sftp-config.sh
+- path: /run/bootstrap/sshd_config
   owner: root:root
-  permissions: "0755" 
-  content: |
-
-    # Installing the oci CLI
-    yum install -y python36-oci-cli
-
-    oci -v
-
-    # Updates Drupal settings
-    #/run/bootstrap/drupal-settings-update.sh
-
-    # Restarts the Apache HTTPD
-    #systemctl restart ssh
-
+  permissions: "0644"
+  encoding: b64
+  content: ${sshd_config}
+- path: /run/bootstrap/bootstrap.sh
+  owner: root:root
+  permissions: "0755"
+  encoding: b64 
+  content: ${bootstrap-sh}
 runcmd:
-- [/run/bootstrap/sftp-config.sh]
+- [/run/bootstrap/bootstrap.sh]
 #  - [rm, -rf, /run/bootstrap]

@@ -9,11 +9,12 @@ terraform {
         source  = "hashicorp/oci"
         version = ">= 4.42.0"
     }
-
+/*
     tls = {
       source = "invidian/tls"
       version = "2.2.1"
     }
+    */
   }
 
   # Use OCI Object Storage as backend for storing Terraform state files

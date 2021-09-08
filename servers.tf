@@ -1,3 +1,9 @@
+locals {
+
+  sftp_user_name = "foo"
+  sftp_user_group = "sftp"
+}
+
 resource "oci_core_instance" "cn_sftp_servers" {
 
   count = var.servers_count
@@ -11,7 +17,7 @@ resource "oci_core_instance" "cn_sftp_servers" {
   shape = var.servers_shape
 
   shape_config {
-    
+
     ocpus = var.servers_ocpus
     memory_in_gbs = var.servers_ocpus * 64
   }
@@ -34,36 +40,35 @@ resource "oci_core_instance" "cn_sftp_servers" {
 
   metadata = {
 
-   ssh_authorized_keys = var.servers_ssh_authorized_keys != "" ? var.servers_ssh_authorized_keys : tls_private_key.sftp_servers_key_pair[0].public_key_openssh
-   user_data = base64encode(templatefile("${path.module}/cloud-init/cloud-init.yaml", {
+    ssh_authorized_keys = var.servers_ssh_authorized_keys != "" ? var.servers_ssh_authorized_keys : tls_private_key.sftp_servers_key_pair[0].public_key_openssh
+    user_data = base64encode(templatefile("${path.module}/cloud-init/cloud-init.yaml", {
 
-    rsa-private = indent(4, tls_private_key.sftp_servers_host_key_pair_rsa.private_key_openssh)
-    rsa-public = tls_private_key.sftp_servers_host_key_pair_rsa.public_key_openssh
+      sftp-user-group = local.sftp_user_group
 
-    ecdsa-private = indent(4, tls_private_key.sftp_servers_host_key_pair_ecdsa.private_key_openssh)
-    ecdsa-public = tls_private_key.sftp_servers_host_key_pair_ecdsa.public_key_openssh
-    #oci-hostname-conf = filebase64("${path.module}/cloud-init/oci-hostname.conf")
+      sftp-user-name = local.sftp_user_name
+      sftp-user-public-key = var.servers_ssh_authorized_keys != "" ? var.servers_ssh_authorized_keys : tls_private_key.sftp_servers_key_pair[0].public_key_openssh
 
-    /*
-    drupal-env = base64encode(templatefile("${path.module}/cloud-init/drupal-env.sh", {
-      database-host = var.drupal.instance_configuration.properties.database_host
-      database-port = var.drupal.instance_configuration.properties.database_port
-      database-name = var.drupal.instance_configuration.properties.database_name
-      database-username = var.drupal.instance_configuration.properties.database_username
-      database-password-secret-id = var.drupal.instance_configuration.properties.database_password_secret_id
-      drupal-saml-environment = var.drupal.instance_configuration.properties.drupal_saml_environment
-      drupal-error-level = var.drupal.instance_configuration.properties.drupal_error_level
-      s3-access-key-secret-id = var.drupal.instance_configuration.properties.s3_access_key_secret_id
-      s3-secret-key-secret-id = var.drupal.instance_configuration.properties.s3_secret_key_secret_id
-      redis-seeds = var.drupal.instance_configuration.properties.redis_seeds
-      redis-nodes = var.drupal.instance_configuration.properties.redis_nodes
-      redis-password-secret-id = var.drupal.instance_configuration.properties.redis_password_secret_id
-    }))
-    
-    php-ini-update = filebase64("${path.module}/cloud-init/php-ini-update.sh")
-    drupal-saml-update = filebase64("${path.module}/cloud-init/drupal-saml-update.sh")
-    drupal-settings-update = filebase64("${path.module}/cloud-init/drupal-settings-update.sh")
-    */
+      host-key-rsa-private = indent(4, tls_private_key.sftp_servers_host_key_pair_rsa.private_key_pem)
+      host-key-rsa-public = tls_private_key.sftp_servers_host_key_pair_rsa.public_key_openssh
+
+      host-key-ecdsa-private = indent(4, tls_private_key.sftp_servers_host_key_pair_ecdsa.private_key_pem)
+      host-key-ecdsa-public = tls_private_key.sftp_servers_host_key_pair_ecdsa.public_key_openssh
+
+      sshd_config = base64encode(templatefile("${path.module}/cloud-init/resources/sshd_config", {
+        sftp-user-group = local.sftp_user_group
+      }))
+
+      bootstrap-sh = base64encode(templatefile("${path.module}/cloud-init/resources/bootstrap.sh", {
+
+        sftp-user-name = local.sftp_user_name
+        sftp-user-group = local.sftp_user_group
+
+        region = var.region
+        bucket-namespace = "frv9ihqh1etj" #oci_objectstorage_namespace.objectstorage_namespace.namespace
+        bucket-name = var.bucket_name
+        s3-access-key = "9f8bf7decb7919e3d68c5003f02cd0de55d878a8" #oci_identity_customer_secret_key.cn_sftp_customer_secret_key.id 
+        s3-secret-key = "TSiV9X5BXvZPbLJOyxamVfO75IEX+M9Spfk3o2za0rQ=" #oci_identity_customer_secret_key.cn_sftp_customer_secret_key.key
+      }))
     }))
   }
 

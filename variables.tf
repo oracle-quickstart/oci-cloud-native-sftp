@@ -1,17 +1,22 @@
+variable "region" {
+
+  description = "Region of the Tenancy"
+  type = string
+}
+
 variable "tenancy_ocid" {
 
   description = "OCID of the Tenancy"
   type = string
 }
 
-/*
+variable "user_ocid" {
 
-variable "compartment_id" {
-
-  description = "OCID of the compartment where creating resources"
+  # Where to Get the Tenancy's OCID and User's OCID: https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five
+  description = "The user OCID"
   type = string
+  default = ""
 }
-*/
 
 variable "network_compartment_id" {
 

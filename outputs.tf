@@ -7,6 +7,14 @@ output "sftp_servers_ip_addresses" {
     value = [for c in oci_core_instance.cn_sftp_servers: c.private_ip]
 }
 
+/*
+output "sftp_servers_ip_addresses_public" {
+
+    value = [for c in oci_core_instance.cn_sftp_servers: c.public_ip]
+}
+*/
+
+/*
 output "sftp_servers_host_keys" {
 
   value = {
@@ -14,3 +22,4 @@ output "sftp_servers_host_keys" {
     ecdsa = tls_private_key.sftp_servers_host_key_pair_ecdsa.public_key_openssh
   }
 }
+*/

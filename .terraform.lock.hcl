@@ -36,22 +36,3 @@ provider "registry.terraform.io/hashicorp/tls" {
     "zh:fc1e12b713837b85daf6c3bb703d7795eaf1c5177aebae1afcf811dd7009f4b0",
   ]
 }
-
-provider "registry.terraform.io/invidian/tls" {
-  version     = "2.2.1"
-  constraints = "2.2.1"
-  hashes = [
-    "h1:mkV6i62PIXIscWxlJFZznxxnC88xJFEXeclsH9k0llc=",
-    "zh:0458b0d8c63f31a1890a10d320d00368a52ed469fd21f03ff9516717cd0a3a08",
-    "zh:074638beb1a06e0f17db6cfd76a96d24ee5af0b2d1a4a8776b10e1347da14f35",
-    "zh:185cd75f00bbbae4397debcee6627a745649c55ca0785b7b606df3cbff448c64",
-    "zh:2c3581bcd2b35a47730940fe869d232139200c8acc4f9d36264a7fc3789a7fb5",
-    "zh:2f66949699dd1604b3dbca536459d7f3fb1e5a4644bc3516c18a9760e640779f",
-    "zh:4ca1ae82a4b4f4a06dac4f9e07544b737a3749efeafbb202a61e2ad6b9806340",
-    "zh:60c9e898792945c847c335f459237ea390a6eb25ee62a4c6139740952e4b69e3",
-    "zh:e42dc269a6d0770d87175a3f1938018529d95ef59bf77859c0e613857d2371b3",
-    "zh:e822f60d2ccbad367fc60807c8cb26fd001fec09103576fb5c87df62f921bff0",
-    "zh:ef19f94b15cd16e13e411ee99561ad03edfb372571fcec254d37c74ac8043450",
-    "zh:f59dc2091aafe66328ae7db043241547a589e9ec18436b16771c010fcc588e8d",
-  ]
-}
