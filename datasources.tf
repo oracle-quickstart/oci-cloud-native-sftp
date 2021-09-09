@@ -18,5 +18,5 @@ data "oci_core_subnet" "cn_sftp_servers_subnet" {
   subnet_id = var.servers_subnet_id != "" ? var.servers_subnet_id : oci_core_subnet.cn_sftp_servers_subnet[0].id
 }
 
-data "oci_objectstorage_namespace" "objectstorage_namespace" {
+data "oci_objectstorage_namespace" "bucket_namespace" {
 }

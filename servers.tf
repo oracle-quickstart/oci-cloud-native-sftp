@@ -1,6 +1,5 @@
 locals {
 
-  sftp_user_name = "foo"
   sftp_user_group = "sftp"
 }
 
@@ -45,7 +44,7 @@ resource "oci_core_instance" "cn_sftp_servers" {
 
       sftp-user-group = local.sftp_user_group
 
-      sftp-user-name = local.sftp_user_name
+      sftp-user-name = var.sftp_user_name
       sftp-user-public-key = var.servers_ssh_authorized_keys != "" ? var.servers_ssh_authorized_keys : tls_private_key.sftp_servers_key_pair[0].public_key_openssh
 
       host-key-rsa-private = indent(4, tls_private_key.sftp_servers_host_key_pair_rsa.private_key_pem)
@@ -60,11 +59,11 @@ resource "oci_core_instance" "cn_sftp_servers" {
 
       bootstrap-sh = base64encode(templatefile("${path.module}/cloud-init/resources/bootstrap.sh", {
 
-        sftp-user-name = local.sftp_user_name
+        sftp-user-name = var.sftp_user_name
         sftp-user-group = local.sftp_user_group
 
         region = var.region
-        bucket-namespace = "frv9ihqh1etj" #oci_objectstorage_namespace.objectstorage_namespace.namespace
+        bucket-namespace = "frv9ihqh1etj" #oci_objectstorage_namespace.bucket_namespace.namespace
         bucket-name = var.bucket_name
         s3-access-key = "9f8bf7decb7919e3d68c5003f02cd0de55d878a8" #oci_identity_customer_secret_key.cn_sftp_customer_secret_key.id 
         s3-secret-key = "TSiV9X5BXvZPbLJOyxamVfO75IEX+M9Spfk3o2za0rQ=" #oci_identity_customer_secret_key.cn_sftp_customer_secret_key.key
