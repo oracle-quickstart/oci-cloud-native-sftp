@@ -9,6 +9,7 @@ variableGroups:
     variables:
       # variables used by Terraform but not necesarrily exposed exposed to end user
       - ${tenancy_ocid}
+      - ${user_ocid}
       - ${region}
   - title: "Network Configuration"
     visible: true
@@ -48,6 +49,11 @@ variableGroups:
       - servers_image_id
       - servers_count
       - servers_ssh_authorized_keys
+  - title: "SFTP User Configuration"
+    visible: true
+    variables:
+      - sftp_user_name
+      - sftp_user_ssh_authorized_keys
 
 # Terraform variables
 variables:
@@ -56,8 +62,13 @@ variables:
     title: Tenancy ID
     description: The Oracle Cloud Identifier (OCID) for your tenancy
     required: true
+  user_ocid:
+    type: string
+    title: User ID
+    description: The Oracle Cloud Identifier (OCID) of the user
+    required: true
+    default: ${current_user_ocid}
   region:
-    visible: true
     type: oci:identity:region:name
     title: Region
     description: The region in which to create the resources
@@ -190,16 +201,25 @@ variables:
     visible: true
     type: number
     title: SFTP Servers Health Check Interval
+    minimum: 1000
+    maximum: 300000
+    multipleOf: 1000
     required: false
   lb_health_check_timeout:
     visible: true
     type: number
     title: SFTP Servers Health Check Timeout
+    minimum: 250
+    maximum: 60000
+    multipleOf: 250
     required: false
   lb_health_check_retries:
     visible: true
     type: number
     title: SFTP Servers Health Check Retries
+    minimum: 1
+    maximum: 10
+    multipleOf: 1
     required: false
   servers_compartment_id:
     visible: true
@@ -264,11 +284,37 @@ variables:
     required: true
     dependsOn:      
        compartmentId: ${tenancy_ocid}      
-       #operatingSystem: "Oracle Linux"   
+       operatingSystem: "Oracle Linux"   
        #operatingSystemVersion: "8.0"
        shape: ${servers_shape}
   servers_ssh_authorized_keys:
     visible: true
     type: oci:core:ssh:publickey
     title: SFTP Servers public SSH key
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
     required: true
+
+  sftp_user_name:
+    visible: true
+    type: string
+    title: SFTP User public SSH key
+    pattern: "^([a-z_]{3,32})$"
+    required: true
+  sftp_user_ssh_authorized_keys:
+    visible: true
+    type: oci:core:ssh:publickey
+    title: SFTP user public SSH key
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+    required: true
+
+outputs:
+  lb_ip_address:
+    title: Network Load Balancer IP Address
+    displayText: The IP address of the Network Load Balancer in front of SFTP servers
+    type: copyableString
+    visible: true
+  sftp_servers_ip_addresses:
+    title: SFTP Servers IP Addresses
+    displayText: The IP addressess of the SFTP servers
+    type: list
+    visible: true
