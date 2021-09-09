@@ -61,7 +61,7 @@ resource "oci_core_route_table" "cn_sftp_servers_subnet_rt" {
 
   route_rules {
 
-    network_entity_id = oci_core_internet_gateway.cn_sftp_internet_gw[0].id
+    network_entity_id = oci_core_nat_gateway.cn_sftp_nat_gw[0].id
 
     destination      = "0.0.0.0/0"
     destination_type = "CIDR_BLOCK"
@@ -102,8 +102,8 @@ resource "oci_core_subnet" "cn_sftp_servers_subnet" {
   cidr_block = var.servers_subnet_cidr
   dns_label  = var.servers_subnet_dns_label
 
-  prohibit_internet_ingress  = false
-  prohibit_public_ip_on_vnic = false
+  prohibit_internet_ingress  = true
+  prohibit_public_ip_on_vnic = true
 }
 
 resource "oci_core_route_table_attachment" "cn_sftp_servers_subnet_rt_attachment" {

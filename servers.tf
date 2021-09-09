@@ -34,7 +34,7 @@ resource "oci_core_instance" "cn_sftp_servers" {
     display_name   = format("vnic-%s-%02d", var.servers_hostname, count.index + 1)
     hostname_label = format("%s-%02d", var.servers_hostname, count.index + 1)
 
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   metadata = {

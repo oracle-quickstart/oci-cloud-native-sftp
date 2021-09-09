@@ -1,10 +1,10 @@
+#!/bin/bash
+set -x
+
 SFTP_MOUNT="/mnt/sftp/${sftp-user-name}"
 SFTP_DIR="$SFTP_MOUNT/private"
 
 S3FS_PASSWD="/etc/s3fs/oci_passwd"
-
-# Installing the oci CLI
-#yum install -y python36-oci-cli
 
 # Due to ChrootDirectory restrictions, the chrooted directory must owned by root. To overcome it, an SFTP user
 # should put its file within a directory like <chroot-directory>/<user-directory>.
@@ -21,11 +21,36 @@ chown root:root $SFTP_MOUNT
 # Enabling the SFTP user to write into its personal directory
 chown ${sftp-user-name}:${sftp-user-group} $SFTP_DIR
 
-# Enable s3fs YUM repository
-yum-config-manager --enable ol8_developer_EPEL
+# Take a look at /etc/os-release for fetching Linux distribution information
+#
+# Copied from https://unix.stackexchange.com/questions/432816/grab-id-of-os-from-etc-os-release
+OS_ID=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
 
-# Install s3fs (https://github.com/s3fs-fuse/s3fs-fuse)
-yum install -y s3fs-fuse
+if [ $OS_ID == "ol" ]; then
+
+  OS_MAJOR_VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"' | cut -d'.' -f1)
+
+  # Enable s3fs YUM repository
+  yum-config-manager --enable ol$OS_MAJOR_VERSION\_developer_EPEL
+
+  # Install s3fs (https://github.com/s3fs-fuse/s3fs-fuse)
+  yum install -y s3fs-fuse
+fi
+
+if [ $OS_ID == "rhel" ] || [ $OS_ID == "centos" ]; then
+
+  # Add the EPEL repository, that includes s3fs
+  yum install -y epel-release
+
+  # Install s3fs (https://github.com/s3fs-fuse/s3fs-fuse)
+  yum install -y s3fs-fuse
+fi
+
+if [ $OS_ID == "ubuntu" ] || [ $OS_ID == "debian" ]; then
+
+  # Install s3fs (https://github.com/s3fs-fuse/s3fs-fuse)
+  apt install -y s3fs
+fi
 
 # Create the s3fs configuration directory
 mkdir -p /etc/s3fs
