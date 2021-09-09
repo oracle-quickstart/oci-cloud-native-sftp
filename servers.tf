@@ -63,10 +63,10 @@ resource "oci_core_instance" "cn_sftp_servers" {
         sftp-user-group = local.sftp_user_group
 
         region = var.region
-        bucket-namespace = "frv9ihqh1etj" #oci_objectstorage_namespace.bucket_namespace.namespace
+        bucket-namespace = data.oci_objectstorage_namespace.bucket_namespace.namespace
         bucket-name = var.bucket_name
-        s3-access-key = "9f8bf7decb7919e3d68c5003f02cd0de55d878a8" #oci_identity_customer_secret_key.cn_sftp_customer_secret_key.id 
-        s3-secret-key = "TSiV9X5BXvZPbLJOyxamVfO75IEX+M9Spfk3o2za0rQ=" #oci_identity_customer_secret_key.cn_sftp_customer_secret_key.key
+        s3-access-key = oci_identity_customer_secret_key.cn_sftp_customer_secret_key.id 
+        s3-secret-key = oci_identity_customer_secret_key.cn_sftp_customer_secret_key.key
       }))
     }))
   }
