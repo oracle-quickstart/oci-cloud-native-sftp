@@ -7,7 +7,7 @@ variableGroups:
   - title: "Tenancy Information"
     visible: false
     variables:
-      # variables used by Terraform but not necesarrily exposed exposed to end user
+      # variables used by Terraform but not necessarily exposed shown to end user
       - ${tenancy_ocid}
       - ${user_ocid}
       - ${region}
@@ -45,8 +45,9 @@ variableGroups:
       - servers_display_name
       - servers_hostname
       - servers_shape
-      - servers_ocpus
       - servers_image_id
+      - servers_ocpus
+      - servers_memory
       - servers_count
       - servers_ssh_authorized_keys
   - title: "SFTP User Configuration"
@@ -54,6 +55,11 @@ variableGroups:
     variables:
       - sftp_user_name
       - sftp_user_ssh_authorized_keys
+  - title: "Notifications Configuration"
+    visible: true
+    variables:
+      - notifications_compartment_id
+      - notifications_email
 
 # Terraform variables
 variables:
@@ -187,7 +193,7 @@ variables:
   lb_compartment_id:
     visible: true
     type: oci:identity:compartment:id
-    title: Network Compartment
+    title: Compartment
     description: The compartment where the Network Load Balancer is created
     required: true
     default: ${compartment_ocid}
@@ -224,7 +230,7 @@ variables:
   servers_compartment_id:
     visible: true
     type: oci:identity:compartment:id
-    title: Network Compartment
+    title: Compartment
     description: The compartment where the SFTP servers are created
     required: true
     default: ${compartment_ocid}
@@ -277,6 +283,29 @@ variables:
     multipleOf: 1
     default: 1
     required: false
+  servers_memory:
+    visible:
+      and:
+        - or:
+          - eq:
+            - servers_shape 
+            - "VM.Standard.E3.Flex"
+          - eq:
+            - servers_shape 
+            - "VM.Standard.E4.Flex"
+          - eq:
+            - servers_shape 
+            - "VM.Optimized3.Flex"
+          - eq:
+            - servers_shape 
+            - "VM.Standard.A1.Flex"
+    type: number
+    title: SFTP Servers Memory (GB)
+    minimum: 16
+    maximum: 64
+    multipleOf: 16
+    default: 16
+    required: false
   servers_image_id:
     visible: true
     type: oci:core:image:id
@@ -285,7 +314,6 @@ variables:
     dependsOn:      
        compartmentId: ${tenancy_ocid}      
        operatingSystem: "Oracle Linux"   
-       #operatingSystemVersion: "8.0"
        shape: ${servers_shape}
   servers_ssh_authorized_keys:
     visible: true
@@ -305,6 +333,20 @@ variables:
     type: oci:core:ssh:publickey
     title: SFTP user public SSH key
     pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+    required: true
+
+  notifications_compartment_id:
+    visible: true
+    type: oci:identity:compartment:id
+    title: Compartment
+    description: The compartment where OCI Notifications and Events resources are created
+    required: true
+    default: ${compartment_ocid}
+  notifications_email:
+    visible: true
+    type: string
+    title: Notifications Email
+    #pattern: "^([a-z_]{3,32})$"
     required: true
 
 outputs:

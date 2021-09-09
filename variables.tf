@@ -169,6 +169,13 @@ variable "servers_ocpus" {
   default = 1
 }
 
+variable "servers_memory" {
+
+  description = "The memore assigned to a SFTP server Compute instance"
+  type = number
+  default = 32
+}
+
 variable "servers_image_id" {
 
   description = "The OCID of the image used for SFTP servers Compute instances"
@@ -199,5 +206,17 @@ variable "sftp_user_name" {
 variable "sftp_user_ssh_authorized_keys" {
 
   description = "The public key, in OpenSSH format, allowed for connecting to SFTP"
+  type = string
+}
+
+variable "notifications_compartment_id" {
+
+  description = "OCID of the compartment where creating OCI Notifications and Events resources"
+  type = string
+}
+
+variable "notifications_email" {
+
+  description = "The mail recipient of the messages about SFTP files changes"
   type = string
 }

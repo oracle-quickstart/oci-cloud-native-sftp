@@ -1,5 +1,18 @@
+# Dictionary Locals
+locals {
+  compute_flexible_shapes = [
+    "VM.Standard.E3.Flex",
+    "VM.Standard.E4.Flex",
+    "VM.Optimized3.Flex",
+    "VM.Standard.A1.Flex"
+  ]
+}
+
+# Checks if is using Flexible Compute Shapes
+
 locals {
 
+  is_servers_shape_flexible = contains(local.compute_flexible_shapes, var.servers_shape)
   sftp_user_group = "sftp"
 }
 
@@ -15,10 +28,15 @@ resource "oci_core_instance" "cn_sftp_servers" {
 
   shape = var.servers_shape
 
-  shape_config {
+  dynamic "shape_config" {
 
-    ocpus = var.servers_ocpus
-    memory_in_gbs = var.servers_ocpus * 64
+    for_each = local.is_servers_shape_flexible ? [1] : []
+
+    content {
+    
+      ocpus         = var.servers_ocpus
+      memory_in_gbs = var.servers_memory
+    }
   }
 
   source_details {
