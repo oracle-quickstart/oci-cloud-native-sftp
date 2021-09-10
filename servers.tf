@@ -1,4 +1,3 @@
-# Dictionary Locals
 locals {
   compute_flexible_shapes = [
     "VM.Standard.E3.Flex",
@@ -7,9 +6,6 @@ locals {
     "VM.Standard.A1.Flex"
   ]
 }
-
-# Checks if is using Flexible Compute Shapes
-
 locals {
 
   is_servers_shape_flexible = contains(local.compute_flexible_shapes, var.servers_shape)
