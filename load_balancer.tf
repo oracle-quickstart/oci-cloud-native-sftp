@@ -51,6 +51,5 @@ resource "oci_network_load_balancer_backend" "stfp_server_backends" {
   port = oci_network_load_balancer_listener.sftp_listener.port
 
   name       = format("sftp-server-%02d", count.index + 1)
-  #ip_address = oci_core_instance.cn_sftp_servers[count.index].private_ip
   target_id = oci_core_instance.cn_sftp_servers[count.index].id
 }
