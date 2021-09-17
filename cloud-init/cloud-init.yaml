@@ -1,11 +1,9 @@
 #cloud-config
 groups:
-- sftp
-
+- ${sftp-user-group}
 users:
 - default
 - name: ${sftp-user-name}
-  #primary_group: sftp
   groups: ${sftp-user-group}
   lock_passwd: true
   no_create_home: true 
