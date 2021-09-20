@@ -25,6 +25,7 @@ data "archive_file" "generate_zip" {
     ".terraform.lock.hcl",
     ".DS_Store",
     "LICENSE",
+    "blog",
     "orm",
     "packer",
     "provider.tf",

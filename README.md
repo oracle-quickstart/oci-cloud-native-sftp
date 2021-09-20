@@ -1,7 +1,7 @@
 # cloud-native-sftp
 Have you ever wondered how to turn a legacy, but still widely adopted, solution like SFTP into a fresh Cloud Native solution ?
 
-That's a Terraform module for [_Turning SFTP Cloud Native_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native).
+That's a Terraform module for [_Turning SFTP Cloud Native_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native), therefore you may would like to know more and go through [_Turning SFTP Cloud Native...with a click_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native-with-a-click) post on [Oracle Blogs](https://blogs.oracle.com/).
 
 ## Deploy Using Oracle Resource Manager
 

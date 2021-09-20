@@ -1,0 +1,2 @@
+# cloud-native-sftp on Oracle Blogs
+The markdown source of [_Turning SFTP Cloud Native...with a click_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native-with-a-click) post on [Oracle Blogs](https://blogs.oracle.com/).
