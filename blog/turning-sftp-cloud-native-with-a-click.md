@@ -7,7 +7,7 @@ Indeed that's true somehow, because such solution involves multiple components t
 
 But one of the never enough praised capabilities enabled by Cloud technologies is Infrastructure as Code, soothing from manual processes associated to infrastructure provisioning, configuration and management: using the [OCI Terraform Provider](https://registry.terraform.io/providers/hashicorp/oci/latest/docs) and [OCI Resource Manager](https://blogs.oracle.com/developers/post/iac-in-the-cloud-getting-started-with-resource-manager) creating a Cloud Native SFTP cannot be easier.
 
-If you just want to see your Cloud Native SFTP running, just click on the [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://github.com/Oracle-CEG-CN/cloud-native-sftp) button you can find at [cloud-native-sftp](https://github.com/Oracle-CEG-CN/cloud-native-sftp) GitHub repository.
+If you just want to see your Cloud Native SFTP running, just click on the [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://github.com/oracle-quickstart/oci-cloud-native-sftp) button you can find at [oci-cloud-native-sftp](https://github.com/oracle-quickstart/oci-cloud-native-sftp) GitHub repository.
 
 Instead if you want to know the technical details, don't stop reading.
 
@@ -114,7 +114,7 @@ Of course that's just a simple example to see with your eyes that everything is 
 
 ## Deployment
 Rather than deploy your Cloud Native SFTP using the Terraform CLI, it's definitely easier to do it using [Oracle Resource Manager](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/resourcemanager.htm):
-1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/Oracle-CEG-CN/cloud-native-sftp/releases/download/v1.0.0/cloud-native-sftp-stack-v1.0.0.zip)
+1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/oracle-quickstart/oci-cloud-native-sftp/releases/latest/download/oci-cloud-native-sftp-stack-latest.zip)
 
     If you aren't already signed in, when prompted, enter the tenancy and user credentials.
 
@@ -133,4 +133,4 @@ Rather than deploy your Cloud Native SFTP using the Terraform CLI, it's definite
 7. If no further changes are necessary, return to the Stack Details page, click **Terraform Actions**, and select **Apply**.
 
 ## I want to know more
-As someone once said, [talk is cheap](https://lkml.org/lkml/2000/8/25/132). If you want to see the code, you can find it within the [cloud-native-sftp](https://github.com/Oracle-CEG-CN/cloud-native-sftp) GitHub repository. Of course, we can also discuss it further if required.
+As someone once said, [talk is cheap](https://lkml.org/lkml/2000/8/25/132). If you want to see the code, you can find it within the [cloud-native-sftp](https://github.com/oracle-quickstart/oci-cloud-native-sftp) GitHub repository. Of course, we can also discuss it further if required.
