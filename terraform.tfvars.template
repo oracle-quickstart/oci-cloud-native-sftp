@@ -1,0 +1,68 @@
+# Region of the Tenancy
+region = "<region>"
+
+# OCID of the Tenancy
+tenancy_ocid = "<tenancy_ocid>"
+
+# The user OCID (https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five)
+user_ocid = "<user_ocid>"
+
+# OCID of the compartment where creating network resources
+network_compartment_id = "<network_compartment_id>"
+
+# OCID of the VCN to use for configuring a Cloud Native SFTP
+# Required when using an existing VCN
+vcn_id = "<vcn_id>"
+
+# OCID of the subnet (public) where the Network Load Balancer is instantiated
+# Required when using an existing VCN
+lb_subnet_id = "<lb_subnet_id>"
+
+# OCID of the subnet (private) where SFTP servers are instantiated
+# Required when using an existing VCN
+servers_subnet_id = "<servers_subnet_id>"
+
+# The CIDR of the VCN to create for configuring a Cloud Native SFTP
+# Required when using a new VCN
+vcn_cidr         = "<vcn_cidr>"
+
+# The CIDR of the subnet (public) to create for the Network Load Balancer
+# Required when using a new VCN
+lb_subnet_cidr   = "<lb_subnet_cidr>"
+
+# The CIDR of the subnet (private) to create for the SFTP servers
+# Required when using a new VCN
+servers_subnet_cidr = "<servers_subnet_cidr>"
+
+# OCID of the compartment designated for S3 Compatibility API
+s3_compatibility_compartment_id	= "<s3_compatibility_compartment_id>"
+
+# The name of the bucket, in designated S3 Compatibility compartment, where to store files
+bucket_name = "<bucket_name>"
+
+# OCID of the compartment where creating the Network Load Balancer
+lb_compartment_id = "<lb_compartment_id>"
+
+# OCID of the compartment where creating the SFTP servers
+servers_compartment_id = "<servers_compartment_id>"
+
+# The OCID of the image used for SFTP servers Compute instances
+servers_image_id = "<servers_image_id>"
+
+# The number of SFTP servers to istantiate
+servers_count = "<servers_count>"
+
+# The public key, in OpenSSH format, allowed for connecting to SFTP servers Compute instances through SSH
+servers_ssh_authorized_keys="<servers_ssh_authorized_keys>"
+
+# The name of the SFTP user
+sftp_user_name = "<sftp_user_name>"
+
+# The public key, in OpenSSH format, allowed for connecting to SFTP
+sftp_user_ssh_authorized_keys="<sftp_user_ssh_authorized_keys>"
+
+# OCID of the compartment where creating OCI Notifications and Events resources
+notifications_compartment_id = "<notifications_compartment_id>"
+
+# The mail recipient of the messages about SFTP files changes
+notifications_email = "<notifications_email>"
