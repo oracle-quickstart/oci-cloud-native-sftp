@@ -1,6 +1,6 @@
 locals {
 
-  is_service_gw_enough = var.vcn_id == "" && data.oci_core_image.cn_sftp_server_image.operating_system == "Oracle Linux"
+  is_service_gw_enough = data.oci_core_image.cn_sftp_server_image.operating_system == "Oracle Linux"
 }
 
 resource "oci_core_vcn" "cn_sftp_vcn" {
@@ -27,7 +27,7 @@ resource "oci_core_internet_gateway" "cn_sftp_internet_gw" {
 
 resource "oci_core_nat_gateway" "cn_sftp_nat_gw" {
 
-  count = local.is_service_gw_enough ? 0 : 1
+  count = (var.vcn_id == "" && !local.is_service_gw_enough ? 1 : 0)
 
   compartment_id = var.network_compartment_id 
   vcn_id         = data.oci_core_vcn.cn_sftp_vcn.id
@@ -39,7 +39,7 @@ resource "oci_core_nat_gateway" "cn_sftp_nat_gw" {
 
 resource "oci_core_service_gateway" "cn_sftp_service_gw" {
 
-  count = local.is_service_gw_enough ? 1 : 0
+  count = (var.vcn_id == "" && local.is_service_gw_enough ? 1 : 0)
 
   compartment_id = var.network_compartment_id 
   vcn_id         = data.oci_core_vcn.cn_sftp_vcn.id
