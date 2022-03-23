@@ -10,7 +10,7 @@ variable "tenancy_ocid" {
   type = string
 }
 
-variable "user_ocid" {
+variable "current_user_ocid" {
 
   # Where to Get the Tenancy's OCID and User's OCID: https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five
   description = "The user OCID"
