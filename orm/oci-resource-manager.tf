@@ -4,13 +4,13 @@ variable "target_directory" {
 
 variable "archive_name" {
 
-  default = "orm"
+  default = "oci-cloud-native-sftp-stack"
 }
 
 locals {
 
   timestamp = formatdate("YYYYMMDDhhmmss", timestamp())
-  archive_filename = "${var.archive_name}-${local.timestamp}.zip"
+  archive_filename = "${var.archive_name}_${local.timestamp}.zip"
 }
 
 data "archive_file" "generate_zip" {
