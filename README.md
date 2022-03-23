@@ -150,3 +150,14 @@ Run the following commands:
 When you no longer need the deployment, you can run this command to destroy the resources:
 
     terraform destroy
+
+## Deployment Notes
+If you select to use existing VCN and subnets, please be sure that:
+- The Route Table attached to the Load Balancer subnet is configured to enable access from Internet
+- The Route Table attached to the SFTP Servers subnet is configured to enable access to Internet, because:
+  - SFTP Servers bootstrap requires [s3fs](https://github.com/s3fs-fuse/s3fs-fuse) installation
+  - SFTP Servers access to Object Storage for storing the files
+
+  If Oracle Linux images are used for SFTP Servers, a [Service Gateway](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/servicegateway.htm#Access_to_Oracle_Services_Service_Gateway) is enough, otherwise a [NAT Gateway](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/NATgateway.htm#NAT_Gateway) is required.
+
+For further information about Route Tables, take a look at [VCN Route Tables](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/managingroutetables.htm).
