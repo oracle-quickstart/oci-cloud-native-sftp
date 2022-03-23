@@ -1,7 +1,7 @@
 # cloud-native-sftp
 Have you ever wondered how to turn a legacy, but still widely adopted, solution like SFTP into a fresh Cloud Native solution ?
 
-That's a Terraform module for [_Turning SFTP Cloud Native_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native), therefore you may would like to know more and go through [_Turning SFTP Cloud Native...with a click_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native-with-a-click) post on [Oracle Blogs](https://blogs.oracle.com/).
+That's a Terraform module for [_Turning SFTP Cloud Native_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native), therefore you may would like to know more and go through [_Turning SFTP Cloud Native...with a click_](https://blogs.oracle.com/cloud-infrastructure/post/turning-sftp-cloud-native-click) post on [Oracle Blogs](https://blogs.oracle.com/).
 
 ## Prerequisites
 - Permission to `manage` the following types of resources in your Oracle Cloud Infrastructure tenancy:
@@ -57,7 +57,6 @@ Now, you'll want a local copy of this repo. You can make that with the commands:
 
     git clone https://github.com/oracle-quickstart/oci-cloud-native-sftp.git
     cd oci-cloud-native-sftp
-    ls
 
 ### Set Up and Configure Terraform
 1. Complete the prerequisites described [here](https://github.com/cloud-partners/oci-prerequisites).
