@@ -105,6 +105,8 @@ resource "oci_core_subnet" "cn_sftp_lb_subnet" {
 
 resource "oci_core_route_table_attachment" "cn_sftp_lb_subnet_rt_attachment" {
 
+  count = (var.lb_subnet_id != "" ? 0 : 1)
+
   route_table_id = oci_core_route_table.cn_sftp_lb_subnet_rt[0].id
   subnet_id      = data.oci_core_subnet.cn_sftp_lb_subnet.id  
 }
@@ -126,6 +128,8 @@ resource "oci_core_subnet" "cn_sftp_servers_subnet" {
 }
 
 resource "oci_core_route_table_attachment" "cn_sftp_servers_subnet_rt_attachment" {
+
+  count = (var.servers_subnet_id != "" ? 0 : 1)
 
   route_table_id = oci_core_route_table.cn_sftp_servers_subnet_rt[0].id
   subnet_id      = data.oci_core_subnet.cn_sftp_servers_subnet.id  
