@@ -18,7 +18,7 @@ resource "oci_core_instance" "cn_sftp_servers" {
 
   compartment_id = var.servers_compartment_id
 
-  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[count.index % (length(data.oci_identity_availability_domains.ads.availability_domains) - 1)].name
+  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[count.index % length(data.oci_identity_availability_domains.ads.availability_domains)].name
 
   display_name = format("%s-%02d", var.servers_display_name, count.index + 1)
 
