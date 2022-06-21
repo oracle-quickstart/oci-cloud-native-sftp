@@ -1,11 +1,7 @@
 locals {
-  compute_flexible_shapes = [
-    "VM.Standard.E3.Flex",
-    "VM.Standard.E4.Flex",
-    "VM.Optimized3.Flex",
-    "VM.Standard.A1.Flex"
-  ]
+  compute_flexible_shapes = toset([for s in data.oci_core_shapes.compute_flexible_shapes.shapes: s.name if s.is_flexible])
 }
+
 locals {
 
   is_servers_shape_flexible = contains(local.compute_flexible_shapes, var.servers_shape)
