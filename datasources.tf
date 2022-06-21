@@ -38,3 +38,8 @@ data "oci_objectstorage_namespace" "bucket_namespace" {
 data "oci_core_image" "cn_sftp_server_image" {
   image_id = var.servers_image_id
 }
+
+data "oci_core_shapes" "compute_flexible_shapes" {
+  compartment_id = var.servers_compartment_id
+  image_id = var.servers_image_id
+}
