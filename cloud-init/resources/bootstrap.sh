@@ -66,10 +66,14 @@ chown root:root
 # Update permissions of s3fs passwd file
 chmod 0600 $S3FS_PASSWD
 
+
+S3FS_UID="$(id -u ${sftp-user-name} 2> /dev/null || echo 1000)"
+S3FS_GID="$(id -g ${sftp-user-group} 2> /dev/null || echo 1000)"
+
 # Adding s3fs configuration to /etc/fstab for mounting the Object Storage bucket
 if ! grep -q 's3fs#${bucket-name}' /etc/fstab ; then
     echo '# Configuration for mounting OCI Object Storage buckets through s3fs' >> /etc/fstab
-    echo "s3fs#${bucket-name} $SFTP_DIR fuse _netdev,allow_other,use_path_request_style,passwd_file=$S3FS_PASSWD,url=https://${bucket-namespace}.compat.objectstorage.${region}.oraclecloud.com/ 0 0" >> /etc/fstab
+    echo "s3fs#${bucket-name} $SFTP_DIR fuse _netdev,allow_other,use_path_request_style,passwd_file=$S3FS_PASSWD,url=https://${bucket-namespace}.compat.objectstorage.${region}.oraclecloud.com/,uid=$S3FS_UID,gid=$S3FS_GID 0 0" >> /etc/fstab
 fi
 
 # Mount the Object Storage bucket

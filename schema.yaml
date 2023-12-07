@@ -272,6 +272,9 @@ variables:
             - "VM.Standard.E4.Flex"
           - eq:
             - servers_shape 
+            - "VM.Standard.E5.Flex"
+          - eq:
+            - servers_shape 
             - "VM.Optimized3.Flex"
           - eq:
             - servers_shape 
@@ -293,6 +296,9 @@ variables:
           - eq:
             - servers_shape 
             - "VM.Standard.E4.Flex"
+          - eq:
+            - servers_shape 
+            - "VM.Standard.E5.Flex"
           - eq:
             - servers_shape 
             - "VM.Optimized3.Flex"
